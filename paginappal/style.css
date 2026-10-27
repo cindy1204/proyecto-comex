@@ -356,16 +356,31 @@ nav a:hover {
 .field select,
 .field textarea {
   width: 100%;
-  padding: 0.8rem 0.9rem;
+  padding: 0.85rem 0.95rem;
   border: 1px solid #dce8f6;
   border-radius: 10px;
   font-size: 1rem;
   background: #f9fbff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #0073e6;
+  box-shadow: 0 0 0 4px rgba(0, 115, 230, 0.08);
 }
 
 .field textarea {
   resize: vertical;
   min-height: 110px;
+}
+
+.form-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #47607d;
 }
 
 .result-box {
@@ -415,6 +430,15 @@ footer {
 
   .form-card {
     padding: 1.25rem;
+  }
+
+  .client-form {
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
   }
 }
 
