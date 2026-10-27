@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contáctenos | ColComex</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="page-header">
+        <div class="logo">
+            <div class="logo-mark">C</div>
+            <h1>ColComex</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#servicios">Servicios</a></li>
+                <li><a href="index.html#nosotros">Nosotros</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="contact-page">
+        <section class="form-card">
+            <div class="form-intro">
+                <p class="eyebrow">Asesoría personalizada</p>
+                <h2>Solicite información según su caso</h2>
+                <p>Selecciona el tipo de producto o servicio y responderemos con las preguntas correctas para tu necesidad.</p>
+            </div>
+
+            <form id="clientForm" class="client-form">
+                <div class="field-group">
+                    <div class="field">
+                        <label for="nombreCompleto">Nombre completo</label>
+                        <input type="text" id="nombreCompleto" name="nombreCompleto" placeholder="Tu nombre" required />
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="correo@empresa.com" required />
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field">
+                        <label for="empresa">Empresa</label>
+                        <input type="text" id="empresa" name="empresa" placeholder="Nombre de la empresa" />
+                    </div>
+
+                    <div class="field">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="Ej. +57 300 123 4567" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="tipoProducto">Tipo de producto o caso</label>
+                    <select id="tipoProducto" name="tipoProducto">
+                        <option value="importaciones">Importaciones</option>
+                        <option value="exportaciones">Exportaciones</option>
+                        <option value="deudaExterna">Deuda externa</option>
+                        <option value="inversiones">Inversiones internacionales</option>
+                        <option value="servicios">Servicios de asesoría</option>
+                    </select>
+                </div>
+
+                <div id="preguntasContainer"></div>
+
+                <button type="submit" class="btn primary">Enviar solicitud</button>
+            </form>
+
+            <pre id="resultado" class="result-box"></pre>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
