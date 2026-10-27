@@ -197,18 +197,53 @@ nav a:hover {
 }
 
 .services,
+.solutions,
 .about,
 .contact {
   padding: 3rem 2rem;
 }
 
 .services > h3,
+.solutions h3,
 .about h3,
 .contact h3 {
   font-size: 2rem;
   color: #004080;
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.solutions-header {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.solution-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.solution-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.6rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.solution-card h4 {
+  color: #004080;
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+}
+
+.solution-card p {
+  margin: 0;
+  line-height: 1.6;
+  color: #465468;
 }
 
 .service-grid {
