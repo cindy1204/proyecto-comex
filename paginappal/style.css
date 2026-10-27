@@ -379,6 +379,12 @@ nav a:hover {
   white-space: pre-wrap;
 }
 
+.result-box.success {
+  background: #ebfff1;
+  border-color: #bde8c7;
+  color: #1d5d3d;
+}
+
 footer {
   background-color: #004080;
   color: white;

@@ -61,6 +61,7 @@ function renderQuestions(productKey) {
       input = document.createElement('select');
       input.name = question.name;
       input.id = question.name;
+      input.required = true;
 
       const defaultOption = document.createElement('option');
       defaultOption.value = '';
@@ -79,18 +80,37 @@ function renderQuestions(productKey) {
       input.id = question.name;
       input.rows = 4;
       input.placeholder = question.placeholder || '';
+      input.required = true;
     } else {
       input = document.createElement('input');
       input.type = question.type;
       input.name = question.name;
       input.id = question.name;
       input.placeholder = question.placeholder || '';
+      input.required = true;
     }
 
     fieldWrap.appendChild(label);
     fieldWrap.appendChild(input);
     preguntasContainer.appendChild(fieldWrap);
   });
+}
+
+function validarFormulario() {
+  if (!form) return true;
+
+  const campos = form.querySelectorAll('input, select, textarea');
+  let valido = true;
+
+  campos.forEach((campo) => {
+    if (!campo.checkValidity()) {
+      campo.reportValidity();
+      valido = false;
+      return;
+    }
+  });
+
+  return valido;
 }
 
 if (tipoProducto) {
@@ -105,10 +125,17 @@ if (form) {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
 
+    if (!validarFormulario()) {
+      return;
+    }
+
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    resultado.textContent = JSON.stringify(data, null, 2);
+    resultado.textContent = 'Solicitud enviada con éxito.\n\n' + JSON.stringify(data, null, 2);
     resultado.style.display = 'block';
+    resultado.classList.add('success');
+    form.reset();
+    renderQuestions(tipoProducto.value);
   });
 }
