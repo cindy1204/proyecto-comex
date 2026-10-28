@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de importaciones | ColComex</title>
+  <link rel="stylesheet" href="../paginappal/style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <h1>ColComex</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../paginappal/index.html">Inicio</a></li>
+        <li><a href="importaciones.html#productNumeralCatalog">Volver a numerales</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="service-page service-form-page">
+    <section class="service-form-section">
+      <div class="section-heading">
+        <p class="eyebrow">Importaciones · Anexo 3 · DCIP-83</p>
+        <h2>Diligenciar formulario</h2>
+        <p>Completa la información resaltada en amarillo en el formato. Al elegir el numeral cambiario verás los documentos que debes adjuntar.</p>
+      </div>
+
+      <form class="client-form service-client-form" id="importacionesForm">
+        <div class="field">
+          <label for="fechaTramite">2. Fecha del trámite</label>
+          <input type="date" id="fechaTramite" name="fechaTramite" required />
+        </div>
+
+        <div class="field-group">
+          <div class="field">
+            <label for="tipoIdentificacion">9. Tipo de identificación</label>
+            <select id="tipoIdentificacion" name="tipoIdentificacion" required>
+              <option value="">Seleccione</option>
+              <option value="NIT">NIT</option>
+              <option value="Cédula de ciudadanía">Cédula de ciudadanía</option>
+              <option value="Cédula de extranjería">Cédula de extranjería</option>
+              <option value="Pasaporte">Pasaporte</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="identificacion">10. Número de identificación</label>
+            <input id="identificacion" name="identificacion" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="nombreImportador">11. Nombre o razón social del importador</label>
+          <input id="nombreImportador" name="nombreImportador" required />
+        </div>
+
+        <div class="field">
+          <label for="numeralOperacion">12. Numeral cambiario</label>
+          <select id="numeralOperacion" name="numeralOperacion" required>
+            <option value="">Seleccione el numeral</option>
+            <option value="2014">2014 · Importaciones pagadas con tarjeta en moneda legal colombiana</option>
+            <option value="2015">2015 · Giro de importación pagada hasta en un mes</option>
+            <option value="2016">2016 · Gastos de importación o exportación incluidos en factura</option>
+            <option value="2017">2017 · Pago anticipado de futuras importaciones</option>
+            <option value="2022">2022 · Importaciones financiadas por proveedores u otros no residentes hasta 12 meses</option>
+            <option value="2023">2023 · Importaciones financiadas por IMC hasta 12 meses</option>
+            <option value="2024">2024 · Importaciones financiadas por no residentes a más de 12 meses</option>
+            <option value="2025">2025 · Importaciones financiadas por IMC a más de 12 meses</option>
+            <option value="2026">2026 · Dación en pago de importaciones</option>
+            <option value="2060">2060 · Pago de importación en moneda legal colombiana</option>
+          </select>
+        </div>
+        <div class="selected-numeral" id="detalleNumeral" aria-live="polite">
+          Selecciona un numeral para consultar qué documentos debes adjuntar.
+        </div>
+
+        <div class="field-group">
+          <div class="field">
+            <label for="monedaNegociacion">13. Moneda de negociación</label>
+            <input id="monedaNegociacion" name="monedaNegociacion" placeholder="Ej. USD" required />
+          </div>
+          <div class="field">
+            <label for="valorMonedaNegociacion">14. Valor total en moneda de negociación</label>
+            <input type="number" id="valorMonedaNegociacion" name="valorMonedaNegociacion" min="0" step="0.01" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label for="tipoCambioDolar">15. Tipo de cambio a dólar</label>
+            <input type="number" id="tipoCambioDolar" name="tipoCambioDolar" min="0" step="0.0001" required />
+          </div>
+          <div class="field">
+            <label for="valorTotalDolares">16. Valor total en dólares</label>
+            <input type="number" id="valorTotalDolares" name="valorTotalDolares" min="0" step="0.01" required />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field">
+            <label for="numeroDeclaracionFactura">17. Número de declaración de importación (DIM) y/o factura comercial</label>
+            <input id="numeroDeclaracionFactura" name="numeroDeclaracionFactura" required />
+          </div>
+          <div class="field">
+            <label for="valorFob">18. Valor FOB en dólares (DIM y/o factura)</label>
+            <input type="number" id="valorFob" name="valorFob" min="0" step="0.01" required />
+          </div>
+        </div>
+
+        <div class="internal-dian">
+          <h3>Información para la DIAN </h3>
+          <div class="field">
+            <label for="beneficiarioExterior">19. Nombre del beneficiario</label>
+            <input id="beneficiarioExterior" name="beneficiarioExterior" required />
+          </div>
+          <div class="field-group">
+            <div class="field">
+              <label for="ciudadExterior">20. Ciudad destino del giro</label>
+              <input id="ciudadExterior" name="ciudadExterior" required />
+            </div>
+            <div class="field">
+              <label for="paisExterior">21. País destino del giro</label>
+              <input id="paisExterior" name="paisExterior" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="observaciones">Observaciones o instrucciones</label>
+          <textarea id="observaciones" name="observaciones" rows="3" placeholder="Ej. Debitar de la cuenta indicada"></textarea>
+        </div>
+        <div class="field">
+          <label for="nombreDeclarante">22. Nombre del declarante</label>
+          <input id="nombreDeclarante" name="nombreDeclarante" required />
+        </div>
+
+        <p class="form-note">Este formato no solicita firma. Es una guía de diligenciamiento y no sustituye el formulario oficial ni la revisión del intermediario cambiario. Adjunta los documentos indicados al enviar tu solicitud por el canal acordado con tu asesor.</p>
+        <button type="submit" class="btn primary">Generar formulario</button>
+      </form>
+
+      <section class="print-form" id="formularioGenerado" hidden aria-live="polite">
+        <div class="print-form-heading">
+          <div>
+            <p class="eyebrow">ColComex · Formato de caracterización</p>
+            <h2>Importaciones</h2>
+          </div>
+          <button type="button" class="btn secondary no-print" id="imprimirFormulario">Imprimir / Guardar PDF</button>
+        </div>
+        <p>Información diligenciada para el formato de datos mínimos de operaciones de cambio por importaciones de bienes.</p>
+        <dl class="generated-fields" id="datosGenerados"></dl>
+        <div class="generated-disclaimer" id="documentosGenerados"></div>
+        <p class="generated-disclaimer">El numeral es una clasificación preliminar basada en la información suministrada. Su aplicación debe validarse con la regulación vigente y con el intermediario del mercado cambiario cuando corresponda.</p>
+      </section>
+    </section>
+  </main>
+  <script src="formulario-importaciones.js"></script>
+</body>
+</html>

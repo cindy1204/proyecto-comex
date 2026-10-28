@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Servicios | ColComex</title>
+  <title>Servicios, transferencias y otros conceptos | ColComex</title>
   <link rel="stylesheet" href="../paginappal/style.css" />
 </head>
 <body>
@@ -15,29 +15,43 @@
     <nav>
       <ul>
         <li><a href="../paginappal/index.html">Inicio</a></li>
-        <li><a href="../paginappal/contactenos.html">Contacto</a></li>
+        <li><a href="#numerales">Numerales</a></li>
+        <li><a href="formulario-servicios.html">Diligenciar formulario</a></li>
       </ul>
     </nav>
   </header>
 
-  <main class="contact-page">
-    <section class="form-card">
-      <p class="eyebrow">Servicios</p>
-      <h2>Servicios especializados</h2>
-      <p>Ofrecemos acompañamiento estratégico para empresas y personas que requieren apoyo en comercio exterior, operativa internacional y gestión documental.</p>
-
-      <div class="service-detail">
-        <h3>Áreas de apoyo</h3>
-        <ul>
-          <li>Asesoría comercial y operativa internacional.</li>
-          <li>Revisión de procesos logísticos y documentales.</li>
-          <li>Seguimiento de cumplimiento y requisitos regulatorios.</li>
-          <li>Apoyo en toma de decisiones para expansión internacional.</li>
-        </ul>
-      </div>
-
-      <a href="../paginappal/contactenos.html" class="btn primary">Solicitar asesoría</a>
+  <main class="service-page">
+    <section class="service-intro">
+      <p class="eyebrow">Anexo 3 · DCIP-83</p>
+      <h2>Servicios, transferencias y otros conceptos</h2>
+      <p>Esta categoría reúne operaciones que no son importaciones ni exportaciones de bienes, como pagos o recaudos por servicios, transferencias, remesas y otros conceptos. El numeral cambiario identifica el concepto de la operación para su clasificación.</p>
+      <p>En el Anexo 3, los <strong>ingresos</strong> corresponden a compras de divisas o consignaciones en cuentas de compensación; los <strong>egresos</strong>, a ventas de divisas o retiros de esas cuentas.</p>
+      <a class="btn primary" href="formulario-servicios.html">Diligenciar formulario</a>
     </section>
+
+    <section class="numeral-section" id="numerales">
+      <div class="section-heading">
+        <p class="eyebrow">Anexo 3 · DCIP-83</p>
+        <h2>Numerales cambiarios</h2>
+        <p>Consulta los códigos de “Servicios, transferencias y otros conceptos” del Anexo 3, separados según la dirección del movimiento.</p>
+      </div>
+      <div class="numeral-controls">
+        <div class="direction-switch" role="tablist" aria-label="Dirección de la operación">
+          <button type="button" class="direction-tab active" id="tabIngresos" role="tab" aria-selected="true" data-direction="ingresos">Ingresos</button>
+          <button type="button" class="direction-tab" id="tabEgresos" role="tab" aria-selected="false" data-direction="egresos">Egresos</button>
+        </div>
+        <label class="numeral-search">
+          <span>Buscar numeral o concepto</span>
+          <input type="search" id="buscarNumeral" placeholder="Ej. 1840 o servicios profesionales" />
+        </label>
+      </div>
+      <p class="numeral-help" id="numeralCount" aria-live="polite"></p>
+      <div class="numeral-list" id="listaNumerales" aria-live="polite"></div>
+      <p class="source-note">Fuente: Banco de la República, Manual de Cambios Internacionales y Pagos, Circular Reglamentaria Externa DCIP-83, Anexo 3. El documento compartido indica actualización al 1 de septiembre de 2021. Verifica la circular vigente y las condiciones aplicables con tu intermediario antes de usar un numeral en una operación real.</p>
+    </section>
+
   </main>
+  <script src="servicios.js"></script>
 </body>
 </html>

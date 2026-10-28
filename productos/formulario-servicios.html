@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de servicios | ColComex</title>
+  <link rel="stylesheet" href="../paginappal/style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <h1>ColComex</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../paginappal/index.html">Inicio</a></li>
+        <li><a href="servicios.html#numerales">Volver a numerales</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="service-page service-form-page">
+    <section class="service-form-section">
+      <div class="section-heading">
+        <p class="eyebrow">Servicios, transferencias y otros conceptos</p>
+        <h2>Diligenciar formulario</h2>
+        <p>Completa los campos amarillos del formato. La información para la DIAN se solicita únicamente en operaciones de egreso.</p>
+      </div>
+
+      <form class="client-form service-client-form" id="serviceForm">
+        <div class="field-group">
+          <div class="field">
+            <label for="direccionOperacion">2. Operación de</label>
+            <select id="direccionOperacion" name="direccionOperacion" required>
+              <option value="">Seleccione</option>
+              <option value="ingresos">Ingreso (reintegro)</option>
+              <option value="egresos">Egreso (giro)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fechaOperacion">3. Fecha de la operación</label>
+            <input type="date" id="fechaOperacion" name="fechaOperacion" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label for="tipoIdentificacion">10. Tipo de identificación</label>
+            <input id="tipoIdentificacion" name="tipoIdentificacion" placeholder="Ej. CC, NIT, CE" required />
+          </div>
+          <div class="field">
+            <label for="identificacion">10. Número de identificación</label>
+            <input id="identificacion" name="identificacion" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label for="nombreCliente">11. Nombre</label>
+            <input id="nombreCliente" name="nombreCliente" required />
+          </div>
+          <div class="field">
+            <label for="telefonoCliente">12. Teléfono</label>
+            <input type="tel" id="telefonoCliente" name="telefonoCliente" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label for="direccionCliente">13. Dirección</label>
+            <input id="direccionCliente" name="direccionCliente" required />
+          </div>
+          <div class="field">
+            <label for="ciudadCliente">14. Ciudad</label>
+            <input id="ciudadCliente" name="ciudadCliente" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label for="codigoMonedaGiro">15. Código de moneda giro/reintegro</label>
+            <input id="codigoMonedaGiro" name="codigoMonedaGiro" placeholder="Ej. USD, EUR" required />
+          </div>
+          <div class="field">
+            <label for="valorMonedaGiro">16. Valor en moneda de giro/reintegro</label>
+            <input type="number" id="valorMonedaGiro" name="valorMonedaGiro" min="0" step="0.01" required />
+          </div>
+        </div>
+        <div class="selected-numeral" id="detalleNumeral" aria-live="polite">Al seleccionar un numeral aparecerá aquí su descripción.</div>
+        <div class="field-group">
+          <div class="field">
+            <label for="tipoCambioDolar">19. Tipo de cambio a dólar</label>
+            <input type="number" id="tipoCambioDolar" name="tipoCambioDolar" min="0" step="0.0001" required />
+          </div>
+          <div class="field">
+            <label for="numeralOperacion">20. Numeral cambiario</label>
+            <select id="numeralOperacion" name="numeralOperacion" required disabled>
+              <option value="">Primero seleccione ingreso o egreso</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="valorNumeralUsd">21. Valor USD</label>
+          <input type="number" id="valorNumeralUsd" name="valorNumeralUsd" min="0" step="0.01" required />
+        </div>
+        <div class="internal-dian" id="informacionDian" hidden>
+          <h3>Información para la DIAN · solo egresos</h3>
+          <p>Completa estos datos internos únicamente cuando la operación sea un egreso.</p>
+          <div class="field-group">
+            <div class="field">
+              <label for="beneficiarioExterior">22. Nombre de quien gira o recibe las divisas</label>
+              <input id="beneficiarioExterior" name="beneficiarioExterior" />
+            </div>
+            <div class="field">
+              <label for="ciudadExterior">23. Ciudad de origen o destino</label>
+              <input id="ciudadExterior" name="ciudadExterior" />
+            </div>
+            <div class="field">
+              <label for="paisExterior">24. País de origen o destino</label>
+              <input id="paisExterior" name="paisExterior" />
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label for="nombreDeclarante">25. Nombre del declarante</label>
+          <input id="nombreDeclarante" name="nombreDeclarante" required />
+        </div>
+        <p class="form-note">La firma del declarante se recoge en el documento impreso. Este formato no sustituye el formulario oficial ni la revisión del intermediario cambiario.</p>
+        <button type="submit" class="btn primary">Generar formulario para firma</button>
+      </form>
+
+      <section class="print-form" id="formularioGenerado" hidden aria-live="polite">
+        <div class="print-form-heading">
+          <div>
+            <p class="eyebrow">ColComex · Formato de caracterización</p>
+            <h2>Servicios, transferencias y otros conceptos</h2>
+          </div>
+          <button type="button" class="btn secondary no-print" id="imprimirFormulario">Imprimir / Guardar PDF</button>
+        </div>
+        <p>Información diligenciada para el formato de datos mínimos de operaciones de cambio por servicios, transferencias y otros conceptos.</p>
+        <dl class="generated-fields" id="datosGenerados"></dl>
+        <p class="generated-disclaimer">El numeral es una clasificación preliminar basada en la información suministrada. Su aplicación debe validarse con la regulación vigente y con el intermediario del mercado cambiario cuando corresponda.</p>
+        <div class="signature-grid">
+          <div><span class="signature-line"></span><span>Firma del cliente</span></div>
+          <div><span class="signature-line"></span><span>Nombre y documento</span></div>
+          <div><span class="signature-line"></span><span>Fecha de firma</span></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <script src="servicios.js"></script>
+</body>
+</html>
