@@ -118,6 +118,10 @@ if (tipoProducto) {
     renderQuestions(event.target.value);
   });
 
+  const requestedType = new URLSearchParams(window.location.search).get('tipoProducto');
+  if ([...tipoProducto.options].some((option) => option.value === requestedType)) {
+    tipoProducto.value = requestedType;
+  }
   renderQuestions(tipoProducto.value);
 }
 
