@@ -2,6 +2,17 @@
 
 API REST de Node.js, Express, TypeScript, Prisma y PostgreSQL. Este directorio es el backend de desarrollo; si la entrega requiere repositorios independientes, se debe publicar como un repositorio propio.
 
+## Arquitectura
+
+El backend separa responsabilidades en cuatro capas:
+
+- `src/domain`: entidades, contratos de repositorio, roles y errores de aplicación.
+- `src/application`: casos de uso para autenticación, catálogo, interacciones y solicitudes de contacto.
+- `src/infrastructure`: adaptadores de Prisma/PostgreSQL, bcrypt, JWT y configuración.
+- `src/interface/http`: composición de dependencias, rutas Express, validación de entrada, autenticación y respuestas HTTP.
+
+Las rutas no acceden directamente a Prisma: invocan servicios de aplicación que usan los contratos del dominio.
+
 ## Requisitos
 
 - Node.js 20 o superior y npm.
@@ -17,11 +28,11 @@ API REST de Node.js, Express, TypeScript, Prisma y PostgreSQL. Este directorio e
    ```
 
 3. Copia `.env.example` a `.env` y configura `DATABASE_URL` con tu usuario, contraseña y base. Reemplaza `JWT_SECRET` por un secreto aleatorio de al menos 32 caracteres. No compartas ni subas `.env`.
-4. Genera el cliente, ejecuta la migración y carga el catálogo:
+4. Genera el cliente, aplica las migraciones incluidas y carga el catálogo:
 
    ```powershell
    npm run prisma:generate
-   npm run prisma:migrate -- --name init
+   npm run prisma:deploy
    npm run db:seed
    ```
 
@@ -36,7 +47,7 @@ API REST de Node.js, Express, TypeScript, Prisma y PostgreSQL. Este directorio e
 
 ## Guardar solicitudes de importación y exportación
 
-Abre las páginas `productos/formulario-importaciones.html` o `productos/formulario-exportaciones.html` usando Live Server en `http://127.0.0.1:5500` o `http://localhost:5500`. Inicia sesión o crea una cuenta en el panel de acceso de la página; luego diligencia el formulario y pulsa **Guardar y generar formulario**. La sesión se conserva solo en la pestaña actual. Cada solicitud se guarda como una interacción asociada a la cuenta autenticada.
+Abre las páginas `productos/formulario-importaciones.html` o `productos/formulario-exportaciones.html` usando Live Server en `http://127.0.0.1:5500` o `http://localhost:5500`. Inicia sesión o crea una cuenta en el panel de acceso de la página; luego diligencia el formulario y pulsa **Guardar y generar formulario**. La sesión se conserva solo en la pestaña actual. Cada solicitud se guarda como una interacción asociada a la cuenta autenticada y al elemento activo del catálogo seleccionado.
 
 Para consultar las solicitudes en pgAdmin, abre `Databases → proyecto_comex → Schemas → public → Tables`, haz clic derecho en `interacciones` y elige **View/Edit Data → All Rows**. También puedes abrir **Tools → Query Tool** y ejecutar:
 
@@ -50,7 +61,7 @@ La columna `data` contiene los campos del formulario en formato JSON. Los formul
 
 El formulario público **Contáctenos** también guarda las solicitudes, sin requerir una cuenta, en `public.solicitudes_contacto`. Para consultarlas en pgAdmin, abre esa tabla con **View/Edit Data → All Rows**. La descripción del caso se almacena en `respuestas` como JSON.
 
-Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`, `interacciones` y `solicitudes_contacto`. La migración de renombrado conserva los registros y las relaciones existentes.
+Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`, `interacciones` y `solicitudes_contacto`. Las migraciones de renombrado conservan los registros y las relaciones existentes.
 
 ## Endpoints
 
@@ -62,13 +73,30 @@ Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`
 | GET | `/api/catalogo?page=1&pageSize=10&category=exportaciones&direction=INGRESOS&search=café` | Público |
 | GET | `/api/catalogo/:id` | Público |
 | POST, PUT, DELETE | `/api/catalogo` y `/api/catalogo/:id` | Solo admin |
+| POST | `/api/contacto` | Público |
 | POST | `/api/interaccion` | Autenticado |
 | GET | `/api/interaccion/mias` | Autenticado; solo interacciones propias |
 | GET | `/api/interaccion` | Solo admin |
 
-El registro siempre asigna el rol `USER`; el cliente no puede otorgarse permisos de administrador. Las interacciones toman el ID del usuario autenticado, nunca del cuerpo de la petición. El login devuelve un JWT con el ID como `sub` y el rol; envía el token con `Authorization: Bearer <token>`.
+El registro siempre asigna el rol `USER`; el cliente no puede otorgarse permisos de administrador. Las interacciones toman el ID del usuario autenticado, nunca del cuerpo de la petición, y quedan vinculadas por llaves foráneas al usuario y al elemento del catálogo elegido. El login devuelve un JWT con los claims `id` y `role`; envíalo como `Authorization: Bearer <token>`. Para mantener compatibilidad temporal, la API también puede leer tokens anteriores que usaban `sub`.
 
 Las respuestas de catálogo usan `{ pagination, data }`. Las respuestas de error no incluyen stack traces. CORS permite únicamente los orígenes configurados en `CORS_ORIGINS`.
+
+### Ejemplos de autorización
+
+Sin token o con un token inválido, un endpoint privado responde `401`:
+
+```json
+{ "error": { "code": "UNAUTHORIZED", "message": "Debes iniciar sesión para realizar esta acción." } }
+```
+
+Una cuenta con rol `USER` que intente administrar el catálogo recibe `403`:
+
+```json
+{ "error": { "code": "FORBIDDEN", "message": "No tienes permiso para realizar esta acción." } }
+```
+
+Para crear un administrador local, configura `SEED_ADMIN_*` en el `.env` y vuelve a ejecutar el seed. No hay credenciales administrativas predeterminadas en el código.
 
 ## Despliegue
 

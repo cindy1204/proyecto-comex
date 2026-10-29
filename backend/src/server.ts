@@ -1,6 +1,6 @@
-import { app } from './app.js';
-import { config } from './config.js';
-import { prisma } from './db.js';
+import { app } from './interface/http/app.js';
+import { config } from './infrastructure/config.js';
+import { prisma } from './infrastructure/prisma-client.js';
 
 const server = app.listen(config.port, () => {
   console.log(`API de ColComex disponible en http://localhost:${config.port}`);

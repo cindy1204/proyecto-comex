@@ -1,10 +1,8 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
-import { prisma } from '../db.js';
+import type { ContactService } from '../../../application/contact-service.js';
 import { asyncHandler } from '../middleware/async-handler.js';
-
-export const contactRouter = Router();
 
 const contactRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -22,28 +20,11 @@ const contactSchema = z.object({
   descripcionCaso: z.string().trim().min(1).max(2000),
 }).strict();
 
-contactRouter.post('/', contactRateLimit, asyncHandler(async (request, response) => {
-  const input = contactSchema.parse(request.body);
-  const {
-    nombreCompleto,
-    email,
-    empresa,
-    telefono,
-    tipoProducto,
-    descripcionCaso,
-  } = input;
-
-  const contactRequest = await prisma.contactRequest.create({
-    data: {
-      nombreCompleto,
-      email,
-      empresa: empresa || null,
-      telefono: telefono || null,
-      tipoProducto,
-      respuestas: { descripcionCaso },
-    },
-    select: { id: true, createdAt: true },
-  });
-
-  response.status(201).json({ data: contactRequest });
-}));
+export function createContactRouter(contactService: ContactService) {
+  const router = Router();
+  router.post('/', contactRateLimit, asyncHandler(async (request, response) => {
+    const input = contactSchema.parse(request.body);
+    response.status(201).json({ data: await contactService.create(input) });
+  }));
+  return router;
+}
