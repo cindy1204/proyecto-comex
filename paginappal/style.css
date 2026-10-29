@@ -649,6 +649,37 @@ footer {
   background: #fff;
 }
 
+.account-panel {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #dce5ed;
+  border-radius: 10px;
+  background: #f7fafc;
+}
+
+.account-panel h3,
+.account-panel p {
+  margin: 0;
+}
+
+.account-panel .client-form {
+  max-width: 560px;
+}
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.account-status {
+  min-height: 1.5em;
+  margin: 0;
+  color: #18477c;
+}
+
 .selected-numeral {
   display: grid;
   gap: 0.4rem;

@@ -28,6 +28,33 @@
         <p>Completa la información resaltada en amarillo en el formato. Al elegir el numeral cambiario verás los documentos que debes adjuntar.</p>
       </div>
 
+      <section class="account-panel" id="accountPanel" aria-labelledby="accountHeading">
+        <h3 id="accountHeading">Accede para guardar tu solicitud</h3>
+        <p>Inicia sesión o crea una cuenta. La solicitud se guardará en la base de datos de este proyecto.</p>
+        <div id="accountCredentials">
+          <form class="client-form" id="accountForm" data-mode="login">
+            <div class="field" id="accountNameField" hidden>
+              <label for="accountName">Nombre</label>
+              <input id="accountName" name="name" autocomplete="name" maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="accountEmail">Correo electrónico</label>
+              <input type="email" id="accountEmail" name="email" autocomplete="username" maxlength="254" required />
+            </div>
+            <div class="field">
+              <label for="accountPassword">Contraseña (mínimo 8 caracteres)</label>
+              <input type="password" id="accountPassword" name="password" autocomplete="current-password" minlength="8" maxlength="128" required />
+            </div>
+            <div class="account-actions">
+              <button type="submit" class="btn primary" id="accountSubmit">Iniciar sesión</button>
+              <button type="button" class="btn secondary" id="switchAccountMode">Crear una cuenta</button>
+            </div>
+          </form>
+        </div>
+        <button type="button" class="btn secondary" id="logoutAccount" hidden>Cerrar sesión</button>
+        <p class="account-status" id="accountStatus" role="status" aria-live="polite"></p>
+      </section>
+
       <form class="client-form service-client-form" id="importacionesForm">
         <div class="field">
           <label for="fechaTramite">2. Fecha del trámite</label>
@@ -135,7 +162,8 @@
         </div>
 
         <p class="form-note">Este formato no solicita firma. Es una guía de diligenciamiento y no sustituye el formulario oficial ni la revisión del intermediario cambiario. Adjunta los documentos indicados al enviar tu solicitud por el canal acordado con tu asesor.</p>
-        <button type="submit" class="btn primary">Generar formulario</button>
+        <button type="submit" class="btn primary" id="guardarImportaciones">Guardar y generar formulario</button>
+        <p class="account-status" id="importacionesStatus" role="status" aria-live="polite"></p>
       </form>
 
       <section class="print-form" id="formularioGenerado" hidden aria-live="polite">
@@ -153,6 +181,7 @@
       </section>
     </section>
   </main>
+  <script src="api-client.js"></script>
   <script src="formulario-importaciones.js"></script>
 </body>
 </html>

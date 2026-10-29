@@ -26,7 +26,7 @@
             <div class="form-intro">
                 <p class="eyebrow">Asesoría personalizada</p>
                 <h2>Solicite información según su caso</h2>
-                <p>Selecciona el tipo de producto o servicio y responderemos con las preguntas correctas para tu necesidad.</p>
+                <p>Cuéntanos cómo podemos ayudarte.</p>
             </div>
 
             <form id="clientForm" class="client-form">
@@ -56,7 +56,7 @@
 
                 <div class="field">
                     <label for="tipoProducto">Tipo de producto o caso</label>
-                    <select id="tipoProducto" name="tipoProducto">
+                    <select id="tipoProducto" name="tipoProducto" required>
                         <option value="importaciones">Importaciones de bienes</option>
                         <option value="exportaciones">Exportaciones de bienes</option>
                         <option value="deudaExterna">Endeudamiento externo y avales y garantías</option>
@@ -65,17 +65,19 @@
                     </select>
                 </div>
 
-                <div id="preguntasContainer"></div>
+                <div class="field">
+                    <label for="descripcionCaso">Describa brevemente su caso</label>
+                    <textarea id="descripcionCaso" name="descripcionCaso" rows="4" required></textarea>
+                </div>
 
-                <p class="form-note">Responderemos su solicitud en un plazo máximo de 24 horas hábiles.</p>
-
-                <button type="submit" class="btn primary">Enviar solicitud</button>
+                <button type="submit" class="btn primary" id="sendContactRequest">Enviar solicitud</button>
             </form>
 
             <pre id="resultado" class="result-box" aria-live="polite"></pre>
         </section>
     </main>
 
+    <script src="../productos/api-client.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de exportaciones de bienes | ColComex</title>
+  <link rel="stylesheet" href="../paginappal/style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <h1>ColComex</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../paginappal/index.html">Inicio</a></li>
+        <li><a href="exportaciones.html#productNumeralCatalog">Volver a numerales</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="service-page service-form-page">
+    <section class="service-form-section">
+      <div class="section-heading">
+        <p class="eyebrow">Exportaciones de bienes · Anexo 3 · DCIP-83</p>
+        <h2>Diligenciar formulario</h2>
+        <p>Completa únicamente los datos resaltados en amarillo en el formato. El reintegro neto se calcula automáticamente con el valor FOB, los gastos y las deducciones.</p>
+      </div>
+
+      <section class="account-panel" id="accountPanel" aria-labelledby="accountHeading">
+        <h3 id="accountHeading">Accede para guardar tu solicitud</h3>
+        <p>Inicia sesión o crea una cuenta. La solicitud se guardará en la base de datos de este proyecto.</p>
+        <div id="accountCredentials">
+          <form class="client-form" id="accountForm" data-mode="login">
+            <div class="field" id="accountNameField" hidden>
+              <label for="accountName">Nombre</label>
+              <input id="accountName" name="name" autocomplete="name" maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="accountEmail">Correo electrónico</label>
+              <input type="email" id="accountEmail" name="email" autocomplete="username" maxlength="254" required />
+            </div>
+            <div class="field">
+              <label for="accountPassword">Contraseña (mínimo 8 caracteres)</label>
+              <input type="password" id="accountPassword" name="password" autocomplete="current-password" minlength="8" maxlength="128" required />
+            </div>
+            <div class="account-actions">
+              <button type="submit" class="btn primary" id="accountSubmit">Iniciar sesión</button>
+              <button type="button" class="btn secondary" id="switchAccountMode">Crear una cuenta</button>
+            </div>
+          </form>
+        </div>
+        <button type="button" class="btn secondary" id="logoutAccount" hidden>Cerrar sesión</button>
+        <p class="account-status" id="accountStatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <form class="client-form service-client-form" id="exportacionesForm">
+        <div class="field">
+          <label for="fechaTramite">2. Fecha del trámite</label>
+          <input type="date" id="fechaTramite" name="fechaTramite" required />
+        </div>
+
+        <div class="field-group">
+          <div class="field">
+            <label for="tipoIdentificacion">9. Tipo de identificación</label>
+            <select id="tipoIdentificacion" name="tipoIdentificacion" required>
+              <option value="">Seleccione</option>
+              <option value="NIT">NIT</option>
+              <option value="Cédula de ciudadanía">Cédula de ciudadanía</option>
+              <option value="Cédula de extranjería">Cédula de extranjería</option>
+              <option value="Pasaporte">Pasaporte</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="identificacion">10. Número de identificación</label>
+            <input id="identificacion" name="identificacion" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="nombreExportador">11. Nombre o razón social del exportador</label>
+          <input id="nombreExportador" name="nombreExportador" required />
+        </div>
+
+        <div class="field-group">
+          <div class="field">
+            <label for="monedaNegociacion">12. Código moneda de negociación</label>
+            <input id="monedaNegociacion" name="monedaNegociacion" placeholder="Ej. USD" required />
+          </div>
+          <div class="field">
+            <label for="valorMonedaNegociacion">13. Valor total en moneda de negociación</label>
+            <input type="number" id="valorMonedaNegociacion" name="valorMonedaNegociacion" min="0" step="0.01" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label for="tasaCambioDolares">14. Tasa de cambio a dólares</label>
+            <input type="number" id="tasaCambioDolares" name="tasaCambioDolares" min="0" step="0.0001" required />
+          </div>
+          <div class="field">
+            <label for="valorTotalDolares">15. Valor total en dólares</label>
+            <input type="number" id="valorTotalDolares" name="valorTotalDolares" min="0" step="0.01" required />
+          </div>
+        </div>
+
+        <section class="invoice-details" aria-labelledby="invoiceDetailsHeading">
+          <h3 id="invoiceDetailsHeading">Detalle de documentos de exportación</h3>
+          <p>Relaciona el número de DEX y/o factura correspondiente a la operación.</p>
+          <div id="invoiceRows">
+            <div class="field-group invoice-row">
+              <div class="field">
+                <label for="numeroDocumento">16. Número de DEX y/o factura</label>
+                <input id="numeroDocumento" name="numeroDocumento" required />
+              </div>
+              <div class="field">
+                <label for="numeralCambiario">17. Numeral cambiario</label>
+                <select id="numeralCambiario" name="numeralCambiario" required>
+                  <option value="">Seleccione el numeral</option>
+                  <option value="1000">1000 · Reintegro por exportaciones de café</option>
+                  <option value="1010">1010 · Reintegro por exportaciones de carbón</option>
+                  <option value="1020">1020 · Reintegro por exportaciones de ferroníquel</option>
+                  <option value="1030">1030 · Reintegro por exportaciones de petróleo y derivados</option>
+                  <option value="1040">1040 · Reintegro por otras exportaciones de bienes</option>
+                  <option value="1043">1043 · Reintegro de exportaciones financiadas a más de 12 meses</option>
+                  <option value="1044">1044 · Dación en pago de exportaciones</option>
+                  <option value="1045">1045 · Anticipo por exportaciones de café</option>
+                  <option value="1050">1050 · Anticipo por otras exportaciones de bienes</option>
+                  <option value="1060">1060 · Pago de exportaciones en moneda legal colombiana</option>
+                  <option value="1061">1061 · Pago de exportaciones en moneda legal con tarjeta</option>
+                  <option value="1510">1510 · Gastos de exportación incluidos en la declaración definitiva</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="valorReintegrado">18. Valor reintegrado DEX/factura en USD</label>
+                <input id="valorReintegrado" type="number" name="valorReintegrado" min="0" step="0.01" required />
+              </div>
+            </div>
+          </div>
+          <div class="selected-numeral" id="detalleNumeral" aria-live="polite">
+            Selecciona un numeral para consultar los documentos requeridos.
+          </div>
+        </section>
+
+        <div class="field-group">
+          <div class="field">
+            <label for="totalValorFob">19. Total valor FOB (USD)</label>
+            <input type="number" id="totalValorFob" name="totalValorFob" min="0" step="0.01" required />
+          </div>
+          <div class="field">
+            <label for="totalGastosExportacion">20. Total gastos de exportación (USD, numeral 1510)</label>
+            <input type="number" id="totalGastosExportacion" name="totalGastosExportacion" min="0" step="0.01" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="deducciones">21. Deducciones (USD, numeral 2016)</label>
+          <input type="number" id="deducciones" name="deducciones" min="0" step="0.01" required />
+        </div>
+        <div class="field">
+          <label for="reintegroNeto">22. Reintegro neto (FOB + gastos - deducciones) · calculado</label>
+          <output id="reintegroNeto" aria-live="polite">USD 0.00</output>
+        </div>
+
+        <div class="field">
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label for="nombreDeclarante">26. Nombre del declarante</label>
+          <input id="nombreDeclarante" name="nombreDeclarante" required />
+        </div>
+
+        <p class="form-note">Este formato es una guía de diligenciamiento y no sustituye el formulario oficial ni la revisión del intermediario cambiario.</p>
+        <button type="submit" class="btn primary" id="guardarExportaciones">Guardar y generar formulario</button>
+        <p class="account-status" id="exportacionesStatus" role="status" aria-live="polite"></p>
+      </form>
+
+      <section class="print-form" id="formularioGenerado" hidden aria-live="polite">
+        <div class="print-form-heading">
+          <div>
+            <p class="eyebrow">ColComex · Formato de caracterización</p>
+            <h2>Exportaciones de bienes</h2>
+          </div>
+          <button type="button" class="btn secondary no-print" id="imprimirFormulario">Imprimir / Guardar PDF</button>
+        </div>
+        <p>Información diligenciada para el formato de datos mínimos de operaciones de cambio por exportaciones de bienes.</p>
+        <dl class="generated-fields" id="datosGenerados"></dl>
+        <h3>Detalle de DEX y/o facturas</h3>
+        <dl class="generated-fields" id="documentosGenerados"></dl>
+        <div class="generated-disclaimer" id="documentosRequeridosGenerados"></div>
+        <p class="generated-disclaimer">El reintegro neto corresponde a la suma del valor FOB y los gastos de exportación, menos las deducciones.</p>
+      </section>
+    </section>
+  </main>
+  <script src="api-client.js"></script>
+  <script src="formulario-exportaciones.js"></script>
+</body>
+</html>

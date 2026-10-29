@@ -1,0 +1,81 @@
+import 'dotenv/config';
+import { readFile } from 'node:fs/promises';
+import { runInNewContext } from 'node:vm';
+import { resolve } from 'node:path';
+import bcrypt from 'bcryptjs';
+import { CatalogDirection, PrismaClient, UserRole } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+type CatalogGroup = Record<string, Array<[string, string, string, string?]>>;
+type CatalogData = Record<string, CatalogGroup>;
+
+async function loadExistingCatalog(): Promise<CatalogData> {
+  const sourcePath = resolve(process.cwd(), '../productos/numerales-productos.js');
+  const source = await readFile(sourcePath, 'utf8');
+  const catalogEnd = source.indexOf('\nconst catalogo = document.getElementById');
+  if (catalogEnd < 0) {
+    throw new Error('No se encontró el final del catálogo en productos/numerales-productos.js.');
+  }
+  const catalogSource = `${source.slice(0, catalogEnd)}\nglobalThis.seedCatalog = catalogoPorProducto;`;
+  const context: { seedCatalog?: CatalogData } = {};
+  runInNewContext(catalogSource, context, { timeout: 1000 });
+  if (!context.seedCatalog) throw new Error('No se pudo leer el catálogo existente.');
+  return context.seedCatalog;
+}
+
+async function seedCatalog() {
+  const catalog = await loadExistingCatalog();
+  let count = 0;
+  for (const [category, directions] of Object.entries(catalog)) {
+    for (const [direction, entries] of Object.entries(directions)) {
+      for (const [code, title, description, note] of entries) {
+        await prisma.catalogItem.upsert({
+          where: {
+            category_direction_code: {
+              category,
+              direction: direction.toUpperCase() as CatalogDirection,
+              code,
+            },
+          },
+          update: { title, description, note: note ?? null, active: true },
+          create: {
+            category,
+            direction: direction.toUpperCase() as CatalogDirection,
+            code,
+            title,
+            description,
+            note: note ?? null,
+          },
+        });
+        count += 1;
+      }
+    }
+  }
+  console.log(`Catálogo cargado o actualizado: ${count} numerales.`);
+}
+
+async function seedTestUser(role: UserRole, nameEnv: string, emailEnv: string, passwordEnv: string) {
+  const email = process.env[emailEnv]?.trim().toLowerCase();
+  const password = process.env[passwordEnv];
+  if (!email && !password) return;
+  if (!email || !password || password.length < 12) {
+    throw new Error(`${emailEnv} y ${passwordEnv} deben configurarse juntos; la contraseña requiere 12 caracteres.`);
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  await prisma.user.upsert({
+    where: { email },
+    update: { name: process.env[nameEnv]?.trim() || role, passwordHash, role },
+    create: { name: process.env[nameEnv]?.trim() || role, email, passwordHash, role },
+  });
+  console.log(`Cuenta ${role.toLowerCase()} de prueba preparada: ${email}`);
+}
+
+try {
+  await seedCatalog();
+  await seedTestUser(UserRole.ADMIN, 'SEED_ADMIN_NAME', 'SEED_ADMIN_EMAIL', 'SEED_ADMIN_PASSWORD');
+  await seedTestUser(UserRole.USER, 'SEED_USER_NAME', 'SEED_USER_EMAIL', 'SEED_USER_PASSWORD');
+} finally {
+  await prisma.$disconnect();
+}

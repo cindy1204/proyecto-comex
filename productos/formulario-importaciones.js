@@ -52,48 +52,66 @@ numeralOperacion.addEventListener('change', () => {
   mostrarDocumentos(numeralOperacion.value);
 });
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!form.reportValidity()) return;
 
-  const formValues = new FormData(form);
-  const numeral = formValues.get('numeralOperacion');
-  const documentos = documentosPorNumeral[numeral];
-  const numeralOption = numeralOperacion.selectedOptions[0];
-  datosGenerados.replaceChildren();
+  const submitButton = document.getElementById('guardarImportaciones');
+  const status = document.getElementById('importacionesStatus');
+  submitButton.disabled = true;
+  status.textContent = 'Guardando la solicitud...';
 
-  Object.entries(nombresCampos).forEach(([name, label]) => {
-    const value = formValues.get(name);
-    if (!value) return;
+  try {
+    const formValues = new FormData(form);
+    await window.ColComexApi.guardarFormulario(
+      'formulario-importaciones',
+      Object.fromEntries(formValues.entries()),
+    );
+    const numeral = formValues.get('numeralOperacion');
+    const documentos = documentosPorNumeral[numeral];
+    const numeralOption = numeralOperacion.selectedOptions[0];
+    datosGenerados.replaceChildren();
 
-    const term = document.createElement('dt');
-    term.textContent = label;
-    const description = document.createElement('dd');
-    description.textContent = value;
-    datosGenerados.append(term, description);
-  });
+    Object.entries(nombresCampos).forEach(([name, label]) => {
+      const value = formValues.get(name);
+      if (!value) return;
 
-  const numeralLabel = document.createElement('dt');
-  numeralLabel.textContent = 'Numeral cambiario';
-  const numeralValue = document.createElement('dd');
-  numeralValue.textContent = numeralOption.textContent;
-  datosGenerados.append(numeralLabel, numeralValue);
-
-  documentosGenerados.replaceChildren();
-  if (documentos) {
-    const documentHeading = document.createElement('strong');
-    documentHeading.textContent = 'Documentos que debes adjuntar';
-    const documentList = document.createElement('ul');
-    documentos.forEach((documento) => {
-      const item = document.createElement('li');
-      item.textContent = documento;
-      documentList.appendChild(item);
+      const term = document.createElement('dt');
+      term.textContent = label;
+      const description = document.createElement('dd');
+      description.textContent = value;
+      datosGenerados.append(term, description);
     });
-    documentosGenerados.append(documentHeading, documentList);
-  }
 
-  formularioGenerado.hidden = false;
-  formularioGenerado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const numeralLabel = document.createElement('dt');
+    numeralLabel.textContent = 'Numeral cambiario';
+    const numeralValue = document.createElement('dd');
+    numeralValue.textContent = numeralOption.textContent;
+    datosGenerados.append(numeralLabel, numeralValue);
+
+    documentosGenerados.replaceChildren();
+    if (documentos) {
+      const documentHeading = document.createElement('strong');
+      documentHeading.textContent = 'Documentos que debes adjuntar';
+      const documentList = document.createElement('ul');
+      documentos.forEach((documento) => {
+        const item = document.createElement('li');
+        item.textContent = documento;
+        documentList.appendChild(item);
+      });
+      documentosGenerados.append(documentHeading, documentList);
+    }
+
+    status.textContent = 'Solicitud guardada en la base de datos. Ya puedes imprimir o guardar el formulario como PDF.';
+    formularioGenerado.hidden = false;
+    formularioGenerado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (error) {
+    status.textContent = error instanceof Error
+      ? error.message
+      : 'No se pudo guardar la solicitud. Revisa la conexión e inténtalo de nuevo.';
+  } finally {
+    submitButton.disabled = false;
+  }
 });
 
 document.getElementById('imprimirFormulario').addEventListener('click', () => window.print());
