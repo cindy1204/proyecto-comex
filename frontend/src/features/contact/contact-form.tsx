@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { apiRequest } from '@/lib/api';
+import { useAuth } from '@/features/auth/auth-provider';
 
 const productTypes = [
   ['importaciones', 'Importaciones de bienes'],
@@ -12,6 +13,7 @@ const productTypes = [
 ] as const;
 
 export function ContactForm() {
+  const { token, loading: authLoading } = useAuth();
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -27,11 +29,14 @@ export function ContactForm() {
     try {
       await apiRequest('/api/contacto', {
         method: 'POST',
+        token: token ?? undefined,
         body: Object.fromEntries(formData.entries()),
       });
       form.reset();
       setSent(true);
-      setMessage('Recibimos tu solicitud. Nuestro equipo se pondrá en contacto contigo.');
+      setMessage(token
+        ? 'Recibimos tu solicitud. Puedes consultarla en Mis solicitudes.'
+        : 'Recibimos tu solicitud. Inicia sesión antes de enviar futuras solicitudes para consultarlas en Mis solicitudes.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'No se pudo enviar la solicitud.');
     } finally {
@@ -74,8 +79,8 @@ export function ContactForm() {
           {message}
         </p>
       )}
-      <button className="button" disabled={submitting} type="submit">
-        {submitting ? 'Enviando…' : 'Enviar'}
+      <button className="button" disabled={submitting || authLoading} type="submit">
+        {authLoading ? 'Verificando sesión…' : submitting ? 'Enviando…' : 'Enviar'}
       </button>
     </form>
   );

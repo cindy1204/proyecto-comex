@@ -3,9 +3,19 @@ import type { UserRecord, UserRepository } from '../domain/auth.js';
 import { prisma } from './prisma-client.js';
 
 export class PrismaUserRepository implements UserRepository {
-  async create(user: { name: string; email: string; passwordHash: string }): Promise<UserRecord> {
+  async create(user: {
+    name: string;
+    email: string;
+    passwordHash: string;
+    role?: 'admin' | 'user';
+  }): Promise<UserRecord> {
     return this.toUser(await prisma.user.create({
-      data: { ...user },
+      data: {
+        name: user.name,
+        email: user.email,
+        passwordHash: user.passwordHash,
+        role: user.role === 'admin' ? UserRole.ADMIN : UserRole.USER,
+      },
     }));
   }
 

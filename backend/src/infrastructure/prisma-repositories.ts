@@ -1,6 +1,6 @@
 import { CatalogDirection, Prisma, UserRole } from '@prisma/client';
 import type { CatalogFilter, CatalogItemInput, CatalogItemRecord, CatalogRepository } from '../domain/catalog.js';
-import type { ContactRepository, ContactRequestInput } from '../domain/contact.js';
+import type { ContactRepository, ContactRequestInput, ContactRequestRecord } from '../domain/contact.js';
 import type { InteractionRecord, InteractionRepository } from '../domain/interactions.js';
 import { prisma } from './prisma-client.js';
 
@@ -103,9 +103,10 @@ export class PrismaInteractionRepository implements InteractionRepository {
 }
 
 export class PrismaContactRepository implements ContactRepository {
-  create(input: ContactRequestInput): Promise<{ id: string; createdAt: Date }> {
+  create(input: ContactRequestInput, userId?: string): Promise<{ id: string; createdAt: Date }> {
     return prisma.contactRequest.create({
       data: {
+        userId: userId ?? null,
         nombreCompleto: input.nombreCompleto,
         email: input.email,
         empresa: input.empresa || null,
@@ -116,6 +117,55 @@ export class PrismaContactRepository implements ContactRepository {
       select: { id: true, createdAt: true },
     });
   }
+
+  async findByUser(userId: string): Promise<ContactRequestRecord[]> {
+    const contacts = await prisma.contactRequest.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+    return contacts.map(toContactRequestRecord);
+  }
+
+  async findAll(): Promise<ContactRequestRecord[]> {
+    const contacts = await prisma.contactRequest.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    return contacts.map(toContactRequestRecord);
+  }
+}
+
+function toContactRequestRecord(contact: {
+  id: string;
+  nombreCompleto: string;
+  email: string;
+  empresa: string | null;
+  telefono: string | null;
+  tipoProducto: string;
+  respuestas: Prisma.JsonValue;
+  createdAt: Date;
+}): ContactRequestRecord {
+  return {
+    id: contact.id,
+    nombreCompleto: contact.nombreCompleto,
+    email: contact.email,
+    empresa: contact.empresa,
+    telefono: contact.telefono,
+    tipoProducto: contact.tipoProducto as ContactRequestRecord['tipoProducto'],
+    descripcionCaso: readContactDescription(contact.respuestas),
+    createdAt: contact.createdAt,
+  };
+}
+
+function readContactDescription(value: Prisma.JsonValue): string {
+  if (
+    typeof value !== 'object'
+    || value === null
+    || Array.isArray(value)
+    || typeof value.descripcionCaso !== 'string'
+  ) {
+    throw new TypeError('La solicitud de contacto almacenada no contiene una descripción válida.');
+  }
+  return value.descripcionCaso;
 }
 
 function toPrismaJsonObject(value: object): Prisma.InputJsonObject {

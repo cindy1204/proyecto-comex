@@ -54,7 +54,7 @@ const authRateLimit = rateLimit({
 });
 app.use('/api/auth', authRateLimit, createAuthRouter(authService));
 app.use('/api/catalogo', createCatalogRouter(catalogService, authService));
-app.use('/api/contacto', createContactRouter(contactService));
+app.use('/api/contacto', createContactRouter(contactService, authService));
 app.use('/api/interaccion', createInteractionRouter(interactionService, authService));
 app.use(notFound);
 app.use(errorHandler);

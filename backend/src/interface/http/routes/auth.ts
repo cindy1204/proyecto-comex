@@ -3,13 +3,19 @@ import { z } from 'zod';
 import type { AuthService } from '../../../application/auth-service.js';
 import { asyncHandler } from '../middleware/async-handler.js';
 import { HttpError } from '../middleware/errors.js';
-import { createAuthenticate } from '../middleware/auth.js';
+import { createAuthenticate, requireAdmin } from '../middleware/auth.js';
 
 const credentialsSchema = z.object({
   name: z.string().trim().min(2).max(120).optional(),
   email: z.string().trim().email().max(254).transform((email) => email.toLowerCase()),
   password: z.string().min(8).max(128),
 });
+
+const adminCredentialsSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(254).transform((email) => email.toLowerCase()),
+  password: z.string().min(12).max(128),
+}).strict();
 
 export function createAuthRouter(authService: AuthService) {
   const router = Router();
@@ -26,6 +32,12 @@ export function createAuthRouter(authService: AuthService) {
       password: input.password,
     });
     response.status(201).json({ data: user });
+  }));
+
+  router.post('/admins', authenticate, requireAdmin, asyncHandler(async (request, response) => {
+    const input = adminCredentialsSchema.parse(request.body);
+    const admin = await authService.registerAdmin(input);
+    response.status(201).json({ data: admin });
   }));
 
   router.post('/login', asyncHandler(async (request, response) => {

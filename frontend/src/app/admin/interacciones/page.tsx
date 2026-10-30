@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: 'Administración de solicitudes' };
 
 export default function AdminInteractionsPage() {
   return (
-    <section className="section">
+    <section className="section admin-page">
       <div className="section-container">
         <header className="page-heading">
           <p className="eyebrow">Administración</p>

@@ -47,11 +47,14 @@ Al iniciar sesión, el frontend guarda el JWT emitido por `/api/auth/login` y lo
 |---|---|---|
 | `/` | Público | Inicio y servicios |
 | `/catalogo` | Público | Búsqueda y paginación del catálogo |
-| `/contacto` | Público | Formulario de contacto |
+| `/contacto` | Público | Formulario de contacto; si hay sesión iniciada, la solicitud queda asociada a la cuenta |
 | `/login` y `/registro` | Público | Autenticación |
+| `/admin` | Público (ingreso); administrador autenticado (panel) | Consultar contactos y registrar administradores |
 | `/importaciones` y `/exportaciones` | Cuenta autenticada | Guardar una interacción ligada al usuario y numeral |
-| `/mis-interacciones` | Cuenta autenticada | Consultar solicitudes propias |
+| `/mis-interacciones` | Cuenta autenticada | Consultar interacciones propias y solicitudes de contacto enviadas con sesión iniciada |
 | `/admin/interacciones` | Administrador | Consultar todas las interacciones |
+
+El primer administrador se configura desde el backend mediante las variables `SEED_ADMIN_*` y `npm run db:seed`. Por seguridad, el registro de administradores desde `/admin` solo está disponible para una sesión administrativa autenticada.
 
 ## Validación
 

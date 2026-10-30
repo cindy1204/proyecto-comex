@@ -13,7 +13,12 @@ export interface UserRecord extends AuthenticatedUser {
 }
 
 export interface UserRepository {
-  create(user: { name: string; email: string; passwordHash: string }): Promise<UserRecord>;
+  create(user: {
+    name: string;
+    email: string;
+    passwordHash: string;
+    role?: UserRoleName;
+  }): Promise<UserRecord>;
   findByEmail(email: string): Promise<UserRecord | null>;
   findById(id: string): Promise<UserRecord | null>;
 }
