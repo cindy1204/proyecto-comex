@@ -59,7 +59,7 @@ ORDER BY created_at DESC;
 
 La columna `data` contiene los campos del formulario en formato JSON. Los formularios almacenan datos identificativos y comerciales: usa únicamente información de prueba mientras desarrollas y restringe el acceso a la base de datos.
 
-El formulario público **Contáctenos** también guarda las solicitudes, sin requerir una cuenta, en `public.solicitudes_contacto`. Para consultarlas en pgAdmin, abre esa tabla con **View/Edit Data → All Rows**. La descripción del caso se almacena en `respuestas` como JSON.
+El formulario público **Contáctenos** guarda las solicitudes en `public.solicitudes_contacto`. Si la persona tiene una sesión iniciada al enviarla, queda asociada a su cuenta y aparece en **Mis solicitudes**; sin sesión, el envío sigue permitido, pero no se vincula a una cuenta. Para consultarlas en pgAdmin, abre esa tabla con **View/Edit Data → All Rows**. La descripción del caso se almacena en `respuestas` como JSON.
 
 Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`, `interacciones` y `solicitudes_contacto`. Las migraciones de renombrado conservan los registros y las relaciones existentes.
 
@@ -70,10 +70,13 @@ Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`
 | POST | `/api/auth/register` | Público |
 | POST | `/api/auth/login` | Público |
 | GET | `/api/auth/me` | Autenticado |
+| POST | `/api/auth/admins` | Solo admin; registrar otro administrador |
 | GET | `/api/catalogo?page=1&pageSize=10&category=exportaciones&direction=INGRESOS&search=café` | Público |
 | GET | `/api/catalogo/:id` | Público |
 | POST, PUT, DELETE | `/api/catalogo` y `/api/catalogo/:id` | Solo admin |
-| POST | `/api/contacto` | Público |
+| POST | `/api/contacto` | Público; opcionalmente autenticado para asociar la solicitud a la cuenta |
+| GET | `/api/contacto/mias` | Autenticado; solo solicitudes de contacto propias |
+| GET | `/api/contacto` | Solo admin; listar solicitudes recibidas |
 | POST | `/api/interaccion` | Autenticado |
 | GET | `/api/interaccion/mias` | Autenticado; solo interacciones propias |
 | GET | `/api/interaccion` | Solo admin |
@@ -96,7 +99,7 @@ Una cuenta con rol `USER` que intente administrar el catálogo recibe `403`:
 { "error": { "code": "FORBIDDEN", "message": "No tienes permiso para realizar esta acción." } }
 ```
 
-Para crear un administrador local, configura `SEED_ADMIN_*` en el `.env` y vuelve a ejecutar el seed. No hay credenciales administrativas predeterminadas en el código.
+Para crear el primer administrador local, configura `SEED_ADMIN_*` en el `.env` y vuelve a ejecutar el seed. Una vez dentro del panel `/admin`, un administrador autenticado puede registrar otras cuentas administrativas. No hay credenciales administrativas predeterminadas en el código.
 
 ## Despliegue
 

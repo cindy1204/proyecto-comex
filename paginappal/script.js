@@ -25,8 +25,11 @@ if (form) {
 
     try {
       const data = Object.fromEntries(new FormData(form).entries());
+      const hasSession = window.ColComexApi.tieneSesion();
       await window.ColComexApi.enviarContacto(data);
-      resultado.textContent = 'Solicitud enviada y guardada correctamente. Nos pondremos en contacto contigo.';
+      resultado.textContent = hasSession
+        ? 'Solicitud enviada y guardada correctamente. Puedes consultarla en Mis solicitudes.'
+        : 'Solicitud enviada y guardada correctamente. Inicia sesión antes de enviar futuras solicitudes para consultarlas en Mis solicitudes.';
       resultado.classList.add('success');
       form.reset();
     } catch (error) {

@@ -18,14 +18,15 @@ enum CatalogDirection {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  name         String
-  email        String        @unique
-  passwordHash String        @map("password_hash")
-  role         UserRole      @default(USER)
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  interactions Interaction[]
+  id              String           @id @default(cuid())
+  name            String
+  email           String           @unique
+  passwordHash    String           @map("password_hash")
+  role            UserRole         @default(USER)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  interactions    Interaction[]
+  contactRequests ContactRequest[]
 
   @@map("usuarios")
 }
@@ -65,6 +66,7 @@ model Interaction {
 
 model ContactRequest {
   id             String   @id @default(cuid())
+  userId         String?  @map("user_id")
   nombreCompleto String   @map("nombre_completo") @db.VarChar(120)
   email          String   @db.VarChar(254)
   empresa        String?  @db.VarChar(160)
@@ -72,8 +74,10 @@ model ContactRequest {
   tipoProducto   String   @map("tipo_producto") @db.VarChar(40)
   respuestas     Json
   createdAt      DateTime @default(now()) @map("created_at")
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([createdAt])
   @@index([tipoProducto, createdAt])
+  @@index([userId, createdAt])
   @@map("solicitudes_contacto")
 }

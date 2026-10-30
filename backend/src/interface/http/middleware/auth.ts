@@ -11,7 +11,33 @@ export function createAuthenticate(authService: AuthService) {
 
     try {
       const identity = authService.authenticate(token);
-      request.auth = { userId: identity.id, role: identity.role };
+      const currentUser = await authService.getCurrentUser(identity.id);
+      request.auth = { userId: currentUser.id, role: currentUser.role };
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+}
+
+export function createOptionalAuthenticate(authService: AuthService) {
+  return async (request: Request, _response: Response, next: NextFunction) => {
+    const authorization = request.header('authorization');
+    if (!authorization) {
+      next();
+      return;
+    }
+
+    const token = authorization.match(/^Bearer\s+(.+)$/i)?.[1];
+    if (!token) {
+      next(new HttpError(401, 'UNAUTHORIZED', 'El encabezado de autenticación no es válido.'));
+      return;
+    }
+
+    try {
+      const identity = authService.authenticate(token);
+      const currentUser = await authService.getCurrentUser(identity.id);
+      request.auth = { userId: currentUser.id, role: currentUser.role };
       next();
     } catch (error) {
       next(error);

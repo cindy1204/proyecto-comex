@@ -52,7 +52,10 @@
 
   window.ColComexApi = Object.freeze({
     async enviarContacto(data) {
-      return request('/api/contacto', { method: 'POST', body: data });
+      return request('/api/contacto', { method: 'POST', body: data, token: getToken() });
+    },
+    tieneSesion() {
+      return Boolean(getToken());
     },
     async guardarFormulario(type, data) {
       const token = getToken();

@@ -23,6 +23,16 @@ export class AuthService {
     return this.toPublicUser(user);
   }
 
+  async registerAdmin(input: { name: string; email: string; password: string }) {
+    const user = await this.users.create({
+      name: input.name,
+      email: input.email,
+      passwordHash: await this.passwords.hash(input.password),
+      role: 'admin',
+    });
+    return this.toPublicUser(user);
+  }
+
   async login(input: { email: string; password: string }) {
     const user = await this.users.findByEmail(input.email);
     const passwordMatches = user

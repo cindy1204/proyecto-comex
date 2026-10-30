@@ -11,9 +11,9 @@ Aplicación para orientar a personas y empresas en operaciones de comercio exter
 ## Funcionalidades
 
 - Catálogo público de numerales con filtros y paginación.
-- Registro, inicio de sesión y roles de usuario y administrador.
+- Registro, inicio de sesión y roles de usuario y administrador, con creación de administradores solo desde una sesión administrativa.
 - Formularios autenticados de importación y exportación, con interacciones vinculadas al usuario y al numeral del catálogo.
-- Formulario público de contacto con los campos definidos para el proyecto.
+- Formulario público de contacto con los campos definidos para el proyecto; las solicitudes enviadas con sesión iniciada aparecen en "Mis solicitudes".
 - Consulta de solicitudes propias y vista administrativa de las interacciones.
 
 ## Desarrollo local
