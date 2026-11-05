@@ -36,7 +36,7 @@ Las rutas no acceden directamente a Prisma: invocan servicios de aplicación que
    npm run db:seed
    ```
 
-   El seed reutiliza los numerales de `../productos/numerales-productos.js`. Para crear cuentas de prueba, completa `SEED_ADMIN_*` y `SEED_USER_*` en `.env`; usa contraseñas propias de al menos 12 caracteres.
+   El seed carga los numerales incluidos en `prisma/data/catalogo.json`, por lo que el backend puede instalarse y ejecutarse sin depender de otros directorios del workspace. Para crear cuentas de prueba, completa `SEED_ADMIN_*` y `SEED_USER_*` en `.env`; usa contraseñas propias de al menos 12 caracteres.
 5. Inicia el servidor:
 
    ```powershell
@@ -45,21 +45,9 @@ Las rutas no acceden directamente a Prisma: invocan servicios de aplicación que
 
    La API queda disponible en `http://localhost:3001`; verifica `/health`.
 
-## Guardar solicitudes de importación y exportación
+## Datos guardados
 
-Abre las páginas `productos/formulario-importaciones.html` o `productos/formulario-exportaciones.html` usando Live Server en `http://127.0.0.1:5500` o `http://localhost:5500`. Inicia sesión o crea una cuenta en el panel de acceso de la página; luego diligencia el formulario y pulsa **Guardar y generar formulario**. La sesión se conserva solo en la pestaña actual. Cada solicitud se guarda como una interacción asociada a la cuenta autenticada y al elemento activo del catálogo seleccionado.
-
-Para consultar las solicitudes en pgAdmin, abre `Databases → proyecto_comex → Schemas → public → Tables`, haz clic derecho en `interacciones` y elige **View/Edit Data → All Rows**. También puedes abrir **Tools → Query Tool** y ejecutar:
-
-```sql
-SELECT type, data, created_at
-FROM public.interacciones
-ORDER BY created_at DESC;
-```
-
-La columna `data` contiene los campos del formulario en formato JSON. Los formularios almacenan datos identificativos y comerciales: usa únicamente información de prueba mientras desarrollas y restringe el acceso a la base de datos.
-
-El formulario público **Contáctenos** guarda las solicitudes en `public.solicitudes_contacto`. Si la persona tiene una sesión iniciada al enviarla, queda asociada a su cuenta y aparece en **Mis solicitudes**; sin sesión, el envío sigue permitido, pero no se vincula a una cuenta. Para consultarlas en pgAdmin, abre esa tabla con **View/Edit Data → All Rows**. La descripción del caso se almacena en `respuestas` como JSON.
+Las interacciones autenticadas de importación y exportación se vinculan con el usuario y el numeral seleccionado; los datos del formulario se almacenan en formato JSON. Las solicitudes de contacto son públicas y, si se envían con una sesión iniciada, quedan asociadas a esa cuenta. Usa únicamente información de prueba durante el desarrollo y restringe el acceso a la base de datos.
 
 Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`, `interacciones` y `solicitudes_contacto`. Las migraciones de renombrado conservan los registros y las relaciones existentes.
 

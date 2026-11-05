@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { readFile } from 'node:fs/promises';
-import { runInNewContext } from 'node:vm';
 import { resolve } from 'node:path';
 import bcrypt from 'bcryptjs';
 import { CatalogDirection, PrismaClient, UserRole } from '@prisma/client';
@@ -10,22 +9,14 @@ const prisma = new PrismaClient();
 type CatalogGroup = Record<string, Array<[string, string, string, string?]>>;
 type CatalogData = Record<string, CatalogGroup>;
 
-async function loadExistingCatalog(): Promise<CatalogData> {
-  const sourcePath = resolve(process.cwd(), '../productos/numerales-productos.js');
+async function loadCatalog(): Promise<CatalogData> {
+  const sourcePath = resolve(process.cwd(), 'prisma/data/catalogo.json');
   const source = await readFile(sourcePath, 'utf8');
-  const catalogEnd = source.indexOf('\nconst catalogo = document.getElementById');
-  if (catalogEnd < 0) {
-    throw new Error('No se encontró el final del catálogo en productos/numerales-productos.js.');
-  }
-  const catalogSource = `${source.slice(0, catalogEnd)}\nglobalThis.seedCatalog = catalogoPorProducto;`;
-  const context: { seedCatalog?: CatalogData } = {};
-  runInNewContext(catalogSource, context, { timeout: 1000 });
-  if (!context.seedCatalog) throw new Error('No se pudo leer el catálogo existente.');
-  return context.seedCatalog;
+  return JSON.parse(source) as CatalogData;
 }
 
 async function seedCatalog() {
-  const catalog = await loadExistingCatalog();
+  const catalog = await loadCatalog();
   let count = 0;
   for (const [category, directions] of Object.entries(catalog)) {
     for (const [direction, entries] of Object.entries(directions)) {
