@@ -7,6 +7,8 @@ export interface InteractionRecord {
   catalogItemId: string;
   type: string;
   data: Record<string, unknown>;
+  operationDate: Date | null;
+  totalUsd: string | null;
   createdAt: Date;
   user?: { id: string; name: string; email: string };
   catalogItem: Pick<CatalogItemRecord, 'id' | 'category' | 'code' | 'title'>;
@@ -18,6 +20,8 @@ export interface InteractionRepository {
     catalogItemId: string;
     type: string;
     data: Record<string, unknown>;
+    operationDate: Date;
+    totalUsd: string;
   }): Promise<InteractionRecord>;
   findByUser(userId: string): Promise<InteractionRecord[]>;
   findAll(): Promise<InteractionRecord[]>;

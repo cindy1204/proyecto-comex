@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 type CatalogGroup = Record<string, Array<[string, string, string, string?]>>;
 type CatalogData = Record<string, CatalogGroup>;
+type SeedUser = { role: UserRole; name: string; email: string; password: string };
 
 async function loadCatalog(): Promise<CatalogData> {
   const sourcePath = resolve(process.cwd(), 'prisma/data/catalogo.json');
@@ -46,27 +47,37 @@ async function seedCatalog() {
   console.log(`Catálogo cargado o actualizado: ${count} numerales.`);
 }
 
-async function seedTestUser(role: UserRole, nameEnv: string, emailEnv: string, passwordEnv: string) {
+function readSeedUser(role: UserRole, nameEnv: string, emailEnv: string, passwordEnv: string): SeedUser {
   const email = process.env[emailEnv]?.trim().toLowerCase();
   const password = process.env[passwordEnv];
-  if (!email && !password) return;
   if (!email || !password || password.length < 12) {
-    throw new Error(`${emailEnv} y ${passwordEnv} deben configurarse juntos; la contraseña requiere 12 caracteres.`);
+    throw new Error(`${emailEnv} y ${passwordEnv} son obligatorios; la contraseña requiere 12 caracteres.`);
   }
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  return {
+    role,
+    name: process.env[nameEnv]?.trim() || (role === UserRole.ADMIN ? 'Administrador de prueba' : 'Usuario de prueba'),
+    email,
+    password,
+  };
+}
+
+async function seedTestUser(user: SeedUser) {
+  const passwordHash = await bcrypt.hash(user.password, 12);
   await prisma.user.upsert({
-    where: { email },
-    update: { name: process.env[nameEnv]?.trim() || role, passwordHash, role },
-    create: { name: process.env[nameEnv]?.trim() || role, email, passwordHash, role },
+    where: { email: user.email },
+    update: { name: user.name, passwordHash, role: user.role },
+    create: { name: user.name, email: user.email, passwordHash, role: user.role },
   });
-  console.log(`Cuenta ${role.toLowerCase()} de prueba preparada: ${email}`);
+  console.log(`Cuenta ${user.role.toLowerCase()} de prueba preparada: ${user.email}`);
 }
 
 try {
+  const admin = readSeedUser(UserRole.ADMIN, 'SEED_ADMIN_NAME', 'SEED_ADMIN_EMAIL', 'SEED_ADMIN_PASSWORD');
+  const user = readSeedUser(UserRole.USER, 'SEED_USER_NAME', 'SEED_USER_EMAIL', 'SEED_USER_PASSWORD');
   await seedCatalog();
-  await seedTestUser(UserRole.ADMIN, 'SEED_ADMIN_NAME', 'SEED_ADMIN_EMAIL', 'SEED_ADMIN_PASSWORD');
-  await seedTestUser(UserRole.USER, 'SEED_USER_NAME', 'SEED_USER_EMAIL', 'SEED_USER_PASSWORD');
+  await seedTestUser(admin);
+  await seedTestUser(user);
 } finally {
   await prisma.$disconnect();
 }

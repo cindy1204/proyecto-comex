@@ -27,7 +27,7 @@ Las rutas no acceden directamente a Prisma: invocan servicios de aplicación que
    npm install
    ```
 
-3. Copia `.env.example` a `.env` y configura `DATABASE_URL` con tu usuario, contraseña y base. Reemplaza `JWT_SECRET` por un secreto aleatorio de al menos 32 caracteres. No compartas ni subas `.env`.
+3. Copia `.env.example` a `.env` y configura `DATABASE_URL` con tu usuario, contraseña y base. Reemplaza `JWT_SECRET` por un secreto aleatorio de al menos 32 caracteres y completa los nombres, correos y contraseñas de `SEED_ADMIN_*` y `SEED_USER_*`; usa contraseñas propias de al menos 12 caracteres. No compartas ni subas `.env`.
 4. Genera el cliente, aplica las migraciones incluidas y carga el catálogo:
 
    ```powershell
@@ -36,7 +36,7 @@ Las rutas no acceden directamente a Prisma: invocan servicios de aplicación que
    npm run db:seed
    ```
 
-   El seed carga los numerales incluidos en `prisma/data/catalogo.json`, por lo que el backend puede instalarse y ejecutarse sin depender de otros directorios del workspace. Para crear cuentas de prueba, completa `SEED_ADMIN_*` y `SEED_USER_*` en `.env`; usa contraseñas propias de al menos 12 caracteres.
+   El seed carga los numerales incluidos en `prisma/data/catalogo.json` y crea o actualiza una cuenta de administrador y una de usuario. Requiere que ambas cuentas estén configuradas en `.env`; no hay contraseñas predeterminadas.
 5. Inicia el servidor:
 
    ```powershell
@@ -47,7 +47,7 @@ Las rutas no acceden directamente a Prisma: invocan servicios de aplicación que
 
 ## Datos guardados
 
-Las interacciones autenticadas de importación y exportación se vinculan con el usuario y el numeral seleccionado; los datos del formulario se almacenan en formato JSON. Las solicitudes de contacto son públicas y, si se envían con una sesión iniciada, quedan asociadas a esa cuenta. Usa únicamente información de prueba durante el desarrollo y restringe el acceso a la base de datos.
+Las interacciones autenticadas de importación y exportación se vinculan con el usuario y el numeral seleccionado; los datos del formulario se conservan en JSON y su fecha de trámite y valor total en dólares se guardan además como `DATE` y `DECIMAL(20,2)`. Las solicitudes de contacto son públicas y, si se envían con una sesión iniciada, quedan asociadas a esa cuenta. El borrado del catálogo es lógico: los numerales se desactivan y se excluyen de las consultas públicas. Usa únicamente información de prueba durante el desarrollo y restringe el acceso a la base de datos.
 
 Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`, `interacciones` y `solicitudes_contacto`. Las migraciones de renombrado conservan los registros y las relaciones existentes.
 

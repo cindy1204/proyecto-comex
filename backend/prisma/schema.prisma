@@ -55,6 +55,8 @@ model Interaction {
   catalogItemId String      @map("catalog_item_id")
   type          String
   data          Json
+  operationDate DateTime?   @db.Date @map("fecha_tramite")
+  totalUsd      Decimal?    @db.Decimal(20, 2) @map("valor_total_dolares")
   createdAt     DateTime    @default(now()) @map("created_at")
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   catalogItem   CatalogItem @relation(fields: [catalogItemId], references: [id], onDelete: Restrict)

@@ -27,7 +27,16 @@ export class InteractionService {
       throw new ApplicationError(400, 'VALIDATION_ERROR', 'El numeral no pertenece al catálogo activo.');
     }
 
-    return this.interactions.create({ userId, catalogItemId: item.id, type, data });
+    const operationDate = parseOperationDate(data.fechaTramite);
+    const totalUsd = parseTotalUsd(data.valorTotalDolares);
+    return this.interactions.create({
+      userId,
+      catalogItemId: item.id,
+      type,
+      data,
+      operationDate,
+      totalUsd,
+    });
   }
 
   findMine(userId: string) {
@@ -37,4 +46,27 @@ export class InteractionService {
   findAll() {
     return this.interactions.findAll();
   }
+}
+
+function parseOperationDate(value: unknown): Date {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new ApplicationError(400, 'VALIDATION_ERROR', 'La fecha del trámite debe ser válida.');
+  }
+  const date = new Date(`${value}T00:00:00.000Z`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value) {
+    throw new ApplicationError(400, 'VALIDATION_ERROR', 'La fecha del trámite debe ser válida.');
+  }
+  return date;
+}
+
+function parseTotalUsd(value: unknown): string {
+  const amount = typeof value === 'string'
+    ? value
+    : typeof value === 'number' && Number.isFinite(value)
+      ? value.toString()
+      : null;
+  if (amount === null || !/^\d{1,18}(?:\.\d{1,2})?$/.test(amount)) {
+    throw new ApplicationError(400, 'VALIDATION_ERROR', 'El valor total en dólares debe ser un monto válido con máximo dos decimales.');
+  }
+  return amount;
 }

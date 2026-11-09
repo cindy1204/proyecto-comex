@@ -70,15 +70,18 @@ export class PrismaInteractionRepository implements InteractionRepository {
     catalogItemId: string;
     type: string;
     data: Record<string, unknown>;
+    operationDate: Date;
+    totalUsd: string;
   }): Promise<InteractionRecord> {
     const interaction = await prisma.interaction.create({
       data: {
         ...input,
         data: toPrismaJsonObject(input.data),
+        totalUsd: new Prisma.Decimal(input.totalUsd),
       },
       include: { catalogItem: { select: { id: true, category: true, code: true, title: true } } },
     });
-    return { ...interaction, data: toJsonObject(interaction.data) };
+    return toInteractionRecord(interaction);
   }
 
   async findByUser(userId: string): Promise<InteractionRecord[]> {
@@ -87,7 +90,7 @@ export class PrismaInteractionRepository implements InteractionRepository {
       include: { catalogItem: { select: { id: true, category: true, code: true, title: true } } },
       orderBy: { createdAt: 'desc' },
     });
-    return interactions.map((interaction) => ({ ...interaction, data: toJsonObject(interaction.data) }));
+    return interactions.map(toInteractionRecord);
   }
 
   async findAll(): Promise<InteractionRecord[]> {
@@ -98,7 +101,7 @@ export class PrismaInteractionRepository implements InteractionRepository {
       },
       orderBy: { createdAt: 'desc' },
     });
-    return interactions.map((interaction) => ({ ...interaction, data: toJsonObject(interaction.data) }));
+    return interactions.map(toInteractionRecord);
   }
 }
 
@@ -153,6 +156,14 @@ function toContactRequestRecord(contact: {
     tipoProducto: contact.tipoProducto as ContactRequestRecord['tipoProducto'],
     descripcionCaso: readContactDescription(contact.respuestas),
     createdAt: contact.createdAt,
+  };
+}
+
+function toInteractionRecord<T extends { totalUsd: Prisma.Decimal | null; data: Prisma.JsonValue }>(interaction: T) {
+  return {
+    ...interaction,
+    totalUsd: interaction.totalUsd?.toString() ?? null,
+    data: toJsonObject(interaction.data),
   };
 }
 
