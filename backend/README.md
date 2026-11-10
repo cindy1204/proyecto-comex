@@ -69,6 +69,8 @@ Las tablas de la base usan nombres en español: `usuarios`, `elementos_catalogo`
 | GET | `/api/interaccion/mias` | Autenticado; solo interacciones propias |
 | GET | `/api/interaccion` | Solo admin |
 
+El registro y el login responden con `{ data: { user, token } }`. El token es un JWT con claims `id`, `role` y `exp`, firmado con `JWT_SECRET` y la duración configurada por `JWT_EXPIRES_IN`; ninguna respuesta incluye la contraseña ni su hash. Un correo ya registrado responde `409`; las credenciales inválidas de login responden `401` con un mensaje genérico.
+
 El registro siempre asigna el rol `USER`; el cliente no puede otorgarse permisos de administrador. Las interacciones toman el ID del usuario autenticado, nunca del cuerpo de la petición, y quedan vinculadas por llaves foráneas al usuario y al elemento del catálogo elegido. El login devuelve un JWT con los claims `id` y `role`; envíalo como `Authorization: Bearer <token>`. Para mantener compatibilidad temporal, la API también puede leer tokens anteriores que usaban `sub`.
 
 Las respuestas de catálogo usan `{ pagination, data }`. Las respuestas de error no incluyen stack traces. CORS permite únicamente los orígenes configurados en `CORS_ORIGINS`.
