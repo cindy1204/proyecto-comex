@@ -30,7 +30,8 @@ Frontend de ColComex con Next.js App Router, TypeScript y Tailwind CSS. La aplic
 - `src/features/auth`: inicio de sesión, registro, contexto de usuario y protección visual de rutas.
 - `src/features/catalog`: búsqueda, filtros y paginación del catálogo.
 - `src/features/contact`: formulario público de contacto.
-- `src/features/interactions`: formularios autenticados de importación/exportación y consulta de solicitudes.
+- `src/features/interactions`: formularios autenticados de importación/exportación, descarga de sus plantillas oficiales diligenciadas en PDF y consulta de solicitudes.
+- `public/formularios`: plantillas oficiales de importación y exportación usadas para generar los PDF.
 - `src/lib/api.ts`: cliente HTTP compartido, manejo de respuestas y errores.
 
 ## Sesión y seguridad
@@ -53,6 +54,8 @@ Al iniciar sesión, el frontend guarda el JWT emitido por `/api/auth/login` y lo
 | `/importaciones` y `/exportaciones` | Cuenta autenticada | Guardar una interacción ligada al usuario y numeral |
 | `/mis-interacciones` | Cuenta autenticada | Consultar interacciones propias y solicitudes de contacto enviadas con sesión iniciada |
 | `/admin/interacciones` | Administrador | Consultar todas las interacciones |
+
+Tras guardar un formulario de importación o exportación, usa **Descargar formulario** para bajar la plantilla oficial en PDF con los datos ingresados. El botón aparece solo después de guardar; **Imprimir / Guardar PDF** sigue imprimiendo el resumen de la solicitud.
 
 El primer administrador se configura desde el backend mediante las variables `SEED_ADMIN_*` y `npm run db:seed`. Por seguridad, el registro de administradores desde `/admin` solo está disponible para una sesión administrativa autenticada.
 

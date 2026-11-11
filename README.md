@@ -12,7 +12,7 @@ Aplicación para orientar a personas y empresas en operaciones de comercio exter
 
 - Catálogo público de numerales con filtros y paginación.
 - Registro, inicio de sesión y roles de usuario y administrador, con creación de administradores solo desde una sesión administrativa.
-- Formularios autenticados de importación y exportación, con interacciones vinculadas al usuario y al numeral del catálogo.
+- Formularios autenticados de importación y exportación, con interacciones vinculadas al usuario y al numeral del catálogo, y descarga de los formularios oficiales diligenciados en PDF.
 - Formulario público de contacto con los campos definidos para el proyecto; las solicitudes enviadas con sesión iniciada aparecen en "Mis solicitudes".
 - Consulta de solicitudes propias y vista administrativa de las interacciones.
 

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/auth-provider';
+import { downloadFilledExportPdf } from '@/features/interactions/export-pdf';
+import { downloadFilledImportPdf } from '@/features/interactions/import-pdf';
 import { ApiError, apiRequest } from '@/lib/api';
 
 interface CatalogItem {
@@ -85,6 +87,8 @@ export function InteractionForm({ type }: Readonly<{ type: OperationType }>) {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState('');
   const [netAmount, setNetAmount] = useState('0.00');
   const [submittedData, setSubmittedData] = useState<Record<string, FormDataEntryValue> | null>(null);
 
@@ -126,6 +130,30 @@ export function InteractionForm({ type }: Readonly<{ type: OperationType }>) {
 
   function updateNetAmount() {
     if (formRef.current) setNetAmount(calculateNet(formRef.current));
+  }
+
+  async function downloadForm() {
+    if (!submittedData) return;
+    setDownloadingPdf(true);
+    setPdfError('');
+    try {
+      const data = Object.fromEntries(
+        Object.entries(submittedData).map(([name, value]) => [name, String(value)]),
+      );
+      if (isImport) {
+        await downloadFilledImportPdf(data);
+      } else {
+        await downloadFilledExportPdf(data);
+      }
+    } catch (downloadError) {
+      setPdfError(
+        downloadError instanceof Error
+          ? downloadError.message
+          : 'No se pudo descargar el formulario diligenciado.',
+      );
+    } finally {
+      setDownloadingPdf(false);
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -219,6 +247,17 @@ export function InteractionForm({ type }: Readonly<{ type: OperationType }>) {
         <button className="button" disabled={saving || loadingCatalog || catalog.length === 0} type="submit">
           {saving ? 'Guardando…' : 'Guardar solicitud'}
         </button>
+        {submittedData && (
+          <button
+            className="button button-outline"
+            disabled={downloadingPdf}
+            onClick={() => void downloadForm()}
+            type="button"
+          >
+            {downloadingPdf ? 'Generando PDF…' : 'Descargar formulario'}
+          </button>
+        )}
+        {pdfError && <p className="form-message form-message-error" role="alert">{pdfError}</p>}
       </form>
 
       {submittedData && (
