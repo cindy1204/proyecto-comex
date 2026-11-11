@@ -32,6 +32,13 @@ const formularioGenerado = document.getElementById('formularioGenerado');
 const datosGenerados = document.getElementById('datosGenerados');
 const documentosGenerados = document.getElementById('documentosGenerados');
 
+function actualizarValorTotalDolares() {
+  const tipoCambio = Number(document.getElementById('tipoCambioDolar').value) || 0;
+  const valorMoneda = Number(document.getElementById('valorMonedaNegociacion').value) || 0;
+  const resultado = tipoCambio * valorMoneda;
+  document.getElementById('valorTotalDolares').value = resultado > 0 ? resultado.toFixed(2) : '';
+}
+
 function mostrarDocumentos(numeral) {
   detalleNumeral.replaceChildren();
   const documentos = documentosPorNumeral[numeral];
@@ -50,6 +57,12 @@ function mostrarDocumentos(numeral) {
 
 numeralOperacion.addEventListener('change', () => {
   mostrarDocumentos(numeralOperacion.value);
+});
+
+form.addEventListener('input', (event) => {
+  if (['tipoCambioDolar', 'valorMonedaNegociacion'].includes(event.target.name)) {
+    actualizarValorTotalDolares();
+  }
 });
 
 form.addEventListener('submit', async (event) => {

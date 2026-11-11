@@ -92,9 +92,19 @@ function agregarCampoGenerado(container, label, value) {
   container.append(term, description);
 }
 
+function actualizarValorTotalDolares() {
+  const tasaCambio = Number(document.getElementById('tasaCambioDolares').value) || 0;
+  const valorMoneda = Number(document.getElementById('valorMonedaNegociacion').value) || 0;
+  const resultado = tasaCambio * valorMoneda;
+  document.getElementById('valorTotalDolares').value = resultado > 0 ? resultado.toFixed(2) : '';
+}
+
 form.addEventListener('input', (event) => {
   if (['totalValorFob', 'totalGastosExportacion', 'deducciones'].includes(event.target.name)) {
     actualizarReintegroNeto();
+  }
+  if (['tasaCambioDolares', 'valorMonedaNegociacion'].includes(event.target.name)) {
+    actualizarValorTotalDolares();
   }
 });
 

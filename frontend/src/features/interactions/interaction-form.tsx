@@ -132,6 +132,18 @@ export function InteractionForm({ type }: Readonly<{ type: OperationType }>) {
     if (formRef.current) setNetAmount(calculateNet(formRef.current));
   }
 
+  function updateTotalDolares(form: HTMLFormElement) {
+    const values = new FormData(form);
+    const exchangeField = isImport ? 'tipoCambioDolar' : 'tasaCambioDolares';
+    const exchangeRate = Number(values.get(exchangeField)) || 0;
+    const amount = Number(values.get('valorMonedaNegociacion')) || 0;
+    const total = exchangeRate * amount;
+    const input = form.querySelector<HTMLInputElement>('input[name="valorTotalDolares"]');
+    if (input) {
+      input.value = total > 0 ? total.toFixed(2) : '';
+    }
+  }
+
   async function downloadForm() {
     if (!submittedData) return;
     setDownloadingPdf(true);
@@ -189,7 +201,12 @@ export function InteractionForm({ type }: Readonly<{ type: OperationType }>) {
 
   return (
     <>
-      <form className="form-stack operation-form" onInput={!isImport ? updateNetAmount : undefined} onSubmit={submit} ref={formRef}>
+      <form className="form-stack operation-form" onInput={(e) => {
+        if (!isImport) updateNetAmount();
+        if (e.currentTarget instanceof HTMLFormElement) {
+          updateTotalDolares(e.currentTarget);
+        }
+      }} onSubmit={submit} ref={formRef}>
         <div className="form-grid">
           {fields.map((field) => (
             <label className="field" key={field.name}>
